@@ -12,7 +12,9 @@ router.post('/refresh', authController.refreshToken);
 
 // Protected routes
 router.get('/profile', authMiddleware, authController.getProfile);
+router.get('/me', authMiddleware, authController.getProfile); // Alias for /profile
 router.put('/profile', authMiddleware, authController.updateProfile);
 router.put('/change-password', authMiddleware, authController.changePassword);
+router.post('/logout', authMiddleware, authController.logout);
 
 export default router;

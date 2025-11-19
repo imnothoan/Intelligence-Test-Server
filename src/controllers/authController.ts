@@ -259,6 +259,22 @@ export const changePassword = asyncHandler(async (req: Request, res: Response) =
 });
 
 /**
+ * Logout user
+ * In a stateless JWT system, logout is handled client-side by removing tokens
+ * This endpoint is provided for consistency with client expectations
+ */
+export const logout = asyncHandler(async (_req: Request, res: Response) => {
+  // In a stateless JWT system, we don't track tokens server-side
+  // The client should remove the tokens from localStorage
+  // This endpoint can be extended to maintain a token blacklist if needed
+  
+  res.json({
+    success: true,
+    message: 'Logged out successfully'
+  });
+});
+
+/**
  * Helper: Generate JWT access token
  */
 function generateToken(user: any): string {

@@ -8,6 +8,7 @@ import dotenv from 'dotenv';
 
 import { config, validateConfig } from './config/index.js';
 import { errorHandler, notFoundHandler } from './middleware/errorHandler.js';
+import { websocketService } from './services/websocketService.js';
 
 // Import routes
 import authRoutes from './routes/authRoutes.js';
@@ -15,6 +16,7 @@ import questionRoutes from './routes/questionRoutes.js';
 import examRoutes from './routes/examRoutes.js';
 import classRoutes from './routes/classRoutes.js';
 import attemptRoutes from './routes/attemptRoutes.js';
+import studentRoutes from './routes/studentRoutes.js';
 
 // Load environment variables
 dotenv.config();
@@ -93,6 +95,7 @@ app.use(`${apiPrefix}/questions`, questionRoutes);
 app.use(`${apiPrefix}/exams`, examRoutes);
 app.use(`${apiPrefix}/classes`, classRoutes);
 app.use(`${apiPrefix}/attempts`, attemptRoutes);
+app.use(`${apiPrefix}/students`, studentRoutes);
 
 // Root endpoint
 app.get('/', (_req, res) => {
@@ -133,12 +136,17 @@ const server = app.listen(PORT, () => {
   console.log(`   - Exams: ${apiPrefix}/exams`);
   console.log(`   - Classes: ${apiPrefix}/classes`);
   console.log(`   - Attempts: ${apiPrefix}/attempts`);
+  console.log(`   - WebSocket: ws://localhost:${PORT}/ws`);
   console.log('\n✨ Ready to accept connections!\n');
 });
+
+// Initialize WebSocket server
+websocketService.initialize(server);
 
 // Graceful shutdown
 process.on('SIGTERM', () => {
   console.log('\n⚠️  SIGTERM signal received: closing HTTP server');
+  websocketService.shutdown();
   server.close(() => {
     console.log('✅ HTTP server closed');
     process.exit(0);
@@ -147,6 +155,7 @@ process.on('SIGTERM', () => {
 
 process.on('SIGINT', () => {
   console.log('\n⚠️  SIGINT signal received: closing HTTP server');
+  websocketService.shutdown();
   server.close(() => {
     console.log('✅ HTTP server closed');
     process.exit(0);
