@@ -1,6 +1,6 @@
 import type { Request, Response } from 'express';
 import bcrypt from 'bcrypt';
-import jwt from 'jsonwebtoken';
+import jwt, { type SignOptions } from 'jsonwebtoken';
 import { supabaseAdmin } from '../config/supabase.js';
 import { config } from '../config/index.js';
 import { ApiError, asyncHandler } from '../middleware/errorHandler.js';
@@ -259,6 +259,22 @@ export const changePassword = asyncHandler(async (req: Request, res: Response) =
 });
 
 /**
+ * Logout user
+ * In a stateless JWT system, logout is handled client-side by removing tokens
+ * This endpoint is provided for consistency with client expectations
+ */
+export const logout = asyncHandler(async (_req: Request, res: Response) => {
+  // In a stateless JWT system, we don't track tokens server-side
+  // The client should remove the tokens from localStorage
+  // This endpoint can be extended to maintain a token blacklist if needed
+  
+  res.json({
+    success: true,
+    message: 'Logged out successfully'
+  });
+});
+
+/**
  * Helper: Generate JWT access token
  */
 function generateToken(user: any): string {
@@ -269,7 +285,7 @@ function generateToken(user: any): string {
       role: user.role
     },
     config.JWT_SECRET,
-    { expiresIn: config.JWT_EXPIRES_IN }
+    { expiresIn: config.JWT_EXPIRES_IN as SignOptions['expiresIn'] }
   );
 }
 
@@ -282,7 +298,7 @@ function generateRefreshToken(user: any): string {
       userId: user.id
     },
     config.JWT_REFRESH_SECRET,
-    { expiresIn: config.JWT_REFRESH_EXPIRES_IN }
+    { expiresIn: config.JWT_REFRESH_EXPIRES_IN as SignOptions['expiresIn'] }
   );
 }
 

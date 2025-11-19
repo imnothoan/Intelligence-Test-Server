@@ -1,7 +1,6 @@
 import type { Request, Response } from 'express';
 import { supabaseAdmin } from '../config/supabase.js';
 import { ApiError, asyncHandler } from '../middleware/errorHandler.js';
-import { catService } from '../services/catService.js';
 import type { Exam, PaginatedResponse } from '../types/index.js';
 
 export const createExam = asyncHandler(async (req: Request, res: Response) => {
