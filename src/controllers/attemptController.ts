@@ -3,7 +3,7 @@ import { supabaseAdmin } from '../config/supabase.js';
 import { ApiError, asyncHandler } from '../middleware/errorHandler.js';
 import { catService } from '../services/catService.js';
 import { geminiService } from '../services/geminiService.js';
-import type { ExamAttempt, QuestionResponse, AntiCheatWarning, CATState } from '../types/index.js';
+import type { QuestionResponse, AntiCheatWarning, CATState } from '../types/index.js';
 
 /**
  * Start a new exam attempt
@@ -133,7 +133,7 @@ export const getNextQuestion = asyncHandler(async (req: Request, res: Response) 
       });
     }
 
-    res.json({
+    return res.json({
       success: true,
       data: nextQuestion.question,
       reason: nextQuestion.reason
@@ -150,7 +150,7 @@ export const getNextQuestion = asyncHandler(async (req: Request, res: Response) 
       .limit(1)
       .single();
 
-    res.json({
+    return res.json({
       success: true,
       data: question || null
     });
@@ -335,7 +335,7 @@ export const completeExamAttempt = asyncHandler(async (req: Request, res: Respon
   if (attempt.exams.enable_cat && attempt.cat_state) {
     // Use CAT ability estimate
     abilityEstimate = attempt.cat_state.ability_estimate;
-    score = catService.calculateScore(abilityEstimate);
+    score = abilityEstimate !== undefined ? catService.calculateScore(abilityEstimate) : 0;
   } else {
     // Calculate traditional score
     const multipleChoiceResponses = attempt.responses.filter(
@@ -393,15 +393,14 @@ export const getExamAttempt = asyncHandler(async (req: Request, res: Response) =
 
   let query = supabaseAdmin
     .from('exam_attempts')
-    .select('*, exams(*)');
+    .select('*, exams(*)')
+    .eq('id', id);
 
   if (req.user.role === 'student') {
     query = query.eq('student_id', req.user.id);
   }
 
-  query = query.eq('id', id).single();
-
-  const { data: attempt, error } = await query;
+  const { data: attempt, error } = await query.single();
 
   if (error || !attempt) {
     throw new ApiError('Exam attempt not found', 404);

@@ -1,6 +1,6 @@
 import type { Request, Response } from 'express';
 import bcrypt from 'bcrypt';
-import jwt from 'jsonwebtoken';
+import jwt, { type SignOptions } from 'jsonwebtoken';
 import { supabaseAdmin } from '../config/supabase.js';
 import { config } from '../config/index.js';
 import { ApiError, asyncHandler } from '../middleware/errorHandler.js';
@@ -269,7 +269,7 @@ function generateToken(user: any): string {
       role: user.role
     },
     config.JWT_SECRET,
-    { expiresIn: config.JWT_EXPIRES_IN }
+    { expiresIn: config.JWT_EXPIRES_IN as SignOptions['expiresIn'] }
   );
 }
 
@@ -282,7 +282,7 @@ function generateRefreshToken(user: any): string {
       userId: user.id
     },
     config.JWT_REFRESH_SECRET,
-    { expiresIn: config.JWT_REFRESH_EXPIRES_IN }
+    { expiresIn: config.JWT_REFRESH_EXPIRES_IN as SignOptions['expiresIn'] }
   );
 }
 

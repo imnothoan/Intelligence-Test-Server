@@ -76,7 +76,7 @@ const limiter = rateLimit({
 app.use('/api/', limiter);
 
 // Health check endpoint
-app.get('/health', (req, res) => {
+app.get('/health', (_req, res) => {
   res.json({
     success: true,
     message: 'Intelligence Test Server is running',
@@ -95,7 +95,7 @@ app.use(`${apiPrefix}/classes`, classRoutes);
 app.use(`${apiPrefix}/attempts`, attemptRoutes);
 
 // Root endpoint
-app.get('/', (req, res) => {
+app.get('/', (_req, res) => {
   res.json({
     success: true,
     message: 'Welcome to Intelligence Test Server API',

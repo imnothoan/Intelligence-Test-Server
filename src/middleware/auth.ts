@@ -24,7 +24,7 @@ interface JWTPayload {
 
 export const authMiddleware = async (
   req: Request,
-  res: Response,
+  _res: Response,
   next: NextFunction
 ): Promise<void> => {
   try {
@@ -66,7 +66,7 @@ export const authMiddleware = async (
 
 // Role-based authorization middleware
 export const requireRole = (...roles: Array<'student' | 'instructor'>) => {
-  return (req: Request, res: Response, next: NextFunction): void => {
+  return (req: Request, _res: Response, next: NextFunction): void => {
     if (!req.user) {
       throw new ApiError('Authentication required', 401);
     }
@@ -82,7 +82,7 @@ export const requireRole = (...roles: Array<'student' | 'instructor'>) => {
 // Optional auth middleware (doesn't fail if no token)
 export const optionalAuth = async (
   req: Request,
-  res: Response,
+  _res: Response,
   next: NextFunction
 ): Promise<void> => {
   try {
