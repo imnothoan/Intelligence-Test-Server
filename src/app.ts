@@ -1,10 +1,12 @@
+import 'dotenv/config';
+
 import express from 'express';
 import cors from 'cors';
 import helmet from 'helmet';
 import compression from 'compression';
 import morgan from 'morgan';
 import rateLimit from 'express-rate-limit';
-import dotenv from 'dotenv';
+
 
 import { config, validateConfig } from './config/index.js';
 import { errorHandler, notFoundHandler } from './middleware/errorHandler.js';
@@ -19,7 +21,7 @@ import attemptRoutes from './routes/attemptRoutes.js';
 import studentRoutes from './routes/studentRoutes.js';
 
 // Load environment variables
-dotenv.config();
+
 
 // Validate configuration
 try {
