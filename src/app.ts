@@ -1,4 +1,4 @@
-import 'dotenv/config';
+import 'dotenv/config'; // Reload env
 
 import express from 'express';
 import cors from 'cors';
@@ -19,6 +19,7 @@ import examRoutes from './routes/examRoutes.js';
 import classRoutes from './routes/classRoutes.js';
 import attemptRoutes from './routes/attemptRoutes.js';
 import studentRoutes from './routes/studentRoutes.js';
+import anticheatRoutes from './routes/anticheatRoutes.js';
 
 // Load environment variables
 
@@ -98,6 +99,7 @@ app.use(`${apiPrefix}/exams`, examRoutes);
 app.use(`${apiPrefix}/classes`, classRoutes);
 app.use(`${apiPrefix}/attempts`, attemptRoutes);
 app.use(`${apiPrefix}/students`, studentRoutes);
+app.use(`${apiPrefix}/anticheat`, anticheatRoutes);
 
 // Root endpoint
 app.get('/', (_req, res) => {
@@ -112,7 +114,8 @@ app.get('/', (_req, res) => {
       questions: `${apiPrefix}/questions`,
       exams: `${apiPrefix}/exams`,
       classes: `${apiPrefix}/classes`,
-      attempts: `${apiPrefix}/attempts`
+      attempts: `${apiPrefix}/attempts`,
+      anticheat: `${apiPrefix}/anticheat`
     }
   });
 });

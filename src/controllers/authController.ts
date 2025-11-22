@@ -39,7 +39,7 @@ export const register = asyncHandler(async (req: Request, res: Response<AuthResp
     .single();
 
   if (error || !user) {
-    console.error('Error creating user:', error);
+    console.error('Error creating user in Supabase:', error);
     throw new ApiError('Failed to create user', 500);
   }
 
@@ -242,7 +242,7 @@ export const changePassword = asyncHandler(async (req: Request, res: Response) =
   // Update password
   const { error: updateError } = await supabaseAdmin
     .from('users')
-    .update({ 
+    .update({
       password_hash: newPasswordHash,
       updated_at: new Date().toISOString()
     })
@@ -267,7 +267,7 @@ export const logout = asyncHandler(async (_req: Request, res: Response) => {
   // In a stateless JWT system, we don't track tokens server-side
   // The client should remove the tokens from localStorage
   // This endpoint can be extended to maintain a token blacklist if needed
-  
+
   res.json({
     success: true,
     message: 'Logged out successfully'
@@ -308,7 +308,7 @@ function generateRefreshToken(user: any): string {
 function parseExpiry(expiry: string): number {
   const unit = expiry.slice(-1);
   const value = parseInt(expiry.slice(0, -1), 10);
-  
+
   switch (unit) {
     case 'h':
       return value * 3600;
